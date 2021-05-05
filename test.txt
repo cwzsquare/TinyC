@@ -1,0 +1,4 @@
+main()
+{ char ch='A';
+  show(ch);
+}
