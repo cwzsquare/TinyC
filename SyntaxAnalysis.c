@@ -46,6 +46,8 @@ void SyntaxAnalysis()
 			printf("LEX: %d,%d\n",token.token,token.tokenVal.number);
 		else if (token.token==SYN_ID)
 			printf("LEX: %d,%s\n",token.token,token.tokenVal.str);
+		else if (token.token==SYN_CH) //既然要加上char支持，debug当然也要加上
+			printf("LEX: %d,%s\n",token.token,token.tokenVal.number);
 		else
 			printf("LEX: %d\n",token.token);
 		token=nextToken();
@@ -68,6 +70,8 @@ static int match (int t)
 			curtoken_num=lookahead.tokenVal.number;
 		else if (t==SYN_ID)
 			for (p=lookahead.tokenVal.str,q=curtoken_str;(*q=*p)!='\0';p++,q++);
+		else if (t==SYN_CH)
+			curtoken_num=lookahead.tokenVal.number;
 		lookahead = nextToken( );
 	}
 	else
@@ -746,6 +750,15 @@ static EXPVAL Prod_F()
 		p=LookupID();
 		val.type=p->type;
 		val.val=p->val;
+	}
+	else if (lookahead.token==SYN_CH)
+	{
+		#if defined(AnaTypeSyn)
+		printf("SYN: F-->char\n");
+		#endif
+		match(SYN_CH);
+		val.type=ID_CHAR;
+		val.val.intval=curtoken_num;
 	}
 	else if (lookahead.token==SYN_PAREN_L)
 	{

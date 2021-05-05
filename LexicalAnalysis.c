@@ -49,7 +49,7 @@ TERMINAL nextToken()
 			state=LexTable[state][LEX_ADDMIN];
 		else if (c>='0' && c<='9')
 			state=LexTable[state][LEX_DIGIT];
-		else if ((c>='a' && c<='z')||(c>='A' && c<='Z')||(c=='_'))
+		else if ((c>='a' && c<='z')||(c>='A' && c<='Z')||(c=='_')||(c=='\\')||(c=='\"')||(c=='\'')) //注意对转义字符的支持
 			state=LexTable[state][LEX_LETTER_];
 		else if (c=='(' || c==')' || c=='{' || c=='}' || c==',' || c==';')
 			state=LexTable[state][LEX_SYMBOL];
@@ -75,7 +75,8 @@ TERMINAL nextToken()
 					  break;
 			case 105: tokenStr[tokenLen]='\0';
 					  token.token=FoundKeyword();
-					  token.tokenVal.str=tokenStr;
+					  if (token.token == SYN_CH) token.tokenVal.number=tokenStr[1];
+					  else token.tokenVal.str=tokenStr;
 					  break;
 			case 201: if (feof(sFile))
 					  {//	  printf("Meet file end!\n");
@@ -153,6 +154,7 @@ static int STR2INT()
 
 static int FoundKeyword()
 {
+	if (tokenStr[0]=='\'' || tokenStr[0]=='\"') return(SYN_CH);
 	if (strcompare(tokenStr,"TRUE")) return(SYN_TRUE);
 	if (strcompare(tokenStr,"FALSE")) return(SYN_FALSE);
 	if (strcompare(tokenStr,"int")) return(SYN_INT);

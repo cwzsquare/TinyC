@@ -1,4 +1,5 @@
 main()
-{ char ch='A';
+{ char ch;
+  ch='\\';
   show(ch);
 }

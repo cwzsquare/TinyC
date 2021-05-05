@@ -43,6 +43,7 @@ static int LexTable[6][8]=
 #define ERR			-1
 #define SYN_NUM		1		// int整数
 #define SYN_ID		2		// id
+#define SYN_CH		3		// 字符
 #define SYN_LT		11		// <
 #define SYN_GT		12		// >
 #define SYN_LE		13		// <=
@@ -66,7 +67,7 @@ static int LexTable[6][8]=
 #define SYN_TRUE	54		// TRUE
 #define SYN_FALSE	55		// FALSE
 #define SYN_INT		56		// int
-#define SYN_CHAR	57		// char
+#define SYN_CHAR	57		// char，此char非彼char，这里是char类型的定义符
 #define SYN_IF		58		// if
 #define SYN_ELSE	59		// else
 #define SYN_WHILE	60		// while
