@@ -163,6 +163,7 @@ static int FoundKeyword()
 	if (strcompare(tokenStr,"else")) return(SYN_ELSE);
 	if (strcompare(tokenStr,"while")) return(SYN_WHILE);
 	if (strcompare(tokenStr,"show")) return(SYN_SHOW);
+	if (strcompare(tokenStr,"continue")) return(SYN_CONTINUE);
 	return(SYN_ID);
 }
 

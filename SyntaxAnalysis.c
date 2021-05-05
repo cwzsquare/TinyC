@@ -33,7 +33,7 @@ static TERMINAL lookahead;
 static int curtoken_num;
 static char curtoken_str[MAXTOKENLEN];
 static IDTABLE *IDTHead=NULL;
-static int run_status=1;	//0；程序不执行；1:程序正常执行；2:跳过当前结构后继续执行
+static int run_status=1;	//0；程序不执行；1:程序正常执行；2:跳过当前结构后继续执行；3:continue跳过当前结构
 
 void SyntaxAnalysis()
 {
@@ -221,6 +221,7 @@ static int Prod_S()
 		#if defined(AnaTypeSyn)
 		printf("SYN: S-->if (B) {S} [else {S}] S");
 		#endif
+		int temp_status=run_status; //if功能也是残缺的，存储if语句前run_status的状态
 		match(SYN_IF);
 		match(SYN_PAREN_L);
 		bval=Prod_B();
@@ -239,6 +240,7 @@ static int Prod_S()
 			match(SYN_BRACE_R);
 			if (run_status==2) run_status=1;
 		}
+		if (run_status==1 || run_status==2) run_status=temp_status;
 		Prod_S();
 	}
 	else if (lookahead.token==SYN_WHILE)
@@ -247,7 +249,7 @@ static int Prod_S()
 		printf("SYN: S-->while(B) {S} S\n");
 		#endif
 		match(SYN_WHILE);
-		file_index=ftell(sFile)-6;
+		file_index=ftell(sFile)-1; //修改指针回退到'('
 		match(SYN_PAREN_L);
 		bval=Prod_B();
 		match(SYN_PAREN_R);
@@ -255,12 +257,25 @@ static int Prod_S()
 		match(SYN_BRACE_L);
 		Prod_S();
 		match(SYN_BRACE_R);
+		if(run_status==3 && bval==0) run_status=2;      //continue
+		else if(run_status==3 && bval!=0) run_status=1; //continue
 		if (run_status==1)
-		{	fseek(sFile,file_index,SEEK_SET);
+		{	lookahead.token=SYN_WHILE; 
+			fseek(sFile,file_index,SEEK_SET);
 			renewLex();
 		}
 		else if (run_status==2)
 			run_status=1;
+		Prod_S();
+	}
+	else if(lookahead.token==SYN_CONTINUE)
+	{
+		#if defined(AnaTypeSyn)
+		printf("SYN: S-->continue; \n");
+		#endif
+		match(SYN_CONTINUE);
+		match(SYN_SEMIC);
+		if (run_status==1) run_status=3;
 		Prod_S();
 	}
 	else
@@ -433,7 +448,7 @@ static int Prod_TB1(int bval1)
 		printf("SYN: TB1-->&& TB1\n");
 		#endif
 		match(SYN_AND);
-		bval1=Prod_FB();
+		bval2=Prod_FB(); //针对lab_5.2.txt，if也是错的，修改bval2=Prod_FB();
 		bval1=(run_status==1 && (bval1==1 && bval2==1)) ? 1 : 0;
 		bval2=Prod_TB1(bval1);
 		return(bval2);

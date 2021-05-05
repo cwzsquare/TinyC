@@ -72,6 +72,7 @@ static int LexTable[6][8]=
 #define SYN_ELSE	59		// else
 #define SYN_WHILE	60		// while
 #define SYN_SHOW	61		// show
+#define SYN_CONTINUE 62     // continue
 
 //用于符号表中类型
 #define ID_FUN		1		// 函数类型
