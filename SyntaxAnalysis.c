@@ -763,10 +763,12 @@ static EXPVAL Prod_F()
 	else if (lookahead.token==SYN_PAREN_L)
 	{
 		#if defined(AnaTypeSyn)
-		printf("SYN: F-->(B)\n");
+		printf("SYN: F-->(B)\n"); //这里莫不是给了提示
 		#endif
 		match(SYN_PAREN_L);
-		val=Prod_E();
+		val.type=ID_INT;
+		// val=Prod_E();
+		val.val.intval=Prod_B(); //修改文法`F-->(E)`为`F-->id | num | char | (B)`
 		match(SYN_PAREN_R);
 	}
 	else

@@ -1,5 +1,6 @@
 main()
-{ char ch;
-  ch='\\';
-  show(ch);
+{ int a,b;
+  b=5;
+  a=(3*b>11)+(b>9||b<=6);
+  show(a);
 }

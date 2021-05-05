@@ -136,11 +136,11 @@ static int FoundRELOOP()
 	else if (tokenStr[0]=='>' && tokenStr[1]!='=') return(SYN_GT);
 	else if (tokenStr[0]=='>' && tokenStr[1]=='=') { prebuf=0; return(SYN_GE); }
 	else if (tokenStr[0]=='=' && tokenStr[1]!='=') return(SYN_SET);
-	else if (tokenStr[0]=='=' && tokenStr[1]=='=') return(SYN_EQ);
+	else if (tokenStr[0]=='=' && tokenStr[1]=='=') { prebuf=0; return(SYN_EQ); } 
 	else if (tokenStr[0]=='!' && tokenStr[1]!='=') return(SYN_NOT);
-	else if (tokenStr[0]=='!' && tokenStr[1]=='=') return(SYN_NE);
-	else if (tokenStr[0]=='&' && tokenStr[1]=='&') return(SYN_AND);
-	else if (tokenStr[0]=='|' && tokenStr[1]=='|') return(SYN_OR);
+	else if (tokenStr[0]=='!' && tokenStr[1]=='=') { prebuf=0; return(SYN_NE); }
+	else if (tokenStr[0]=='&' && tokenStr[1]=='&') { prebuf=0; return(SYN_AND); } 
+	else if (tokenStr[0]=='|' && tokenStr[1]=='|') { prebuf=0; return(SYN_OR); } //这个双目运算。。
 	else return(ERR);
 }
 
